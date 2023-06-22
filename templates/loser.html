@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Great Number Game - Loser</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Sorry, you lost!<br></h1>
+    <p>The correct number was: {{ correct_number }}</p>
+    <form method="POST" action="/loser">
+        <input type="submit" value="Play Again">
+    </form>
+</body>
+</html>

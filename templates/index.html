@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Great Number Game</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!--SENSEI BONUS: Only allow the user to guess up to 5 times. If they don't guess it on their 5th attempt, display a "You Lose" message and allow them to try again.-->
+    <script>
+        $(document).ready(function() {
+            $("form").submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $("#status").text(response.status).show();
+                        if (response.status.includes("Congratulations!")) {
+                            $("#status").addClass("success-status");
+                            $("#guess-form").hide();
+                            $("#play-again").show();
+                        } else if (response.status.includes("You Lose!")) {
+                            $("#status").addClass("lose-status");
+                            $("#guess-form").hide();
+                            $("#play-again").show();
+                        } else {
+                            $("#status").removeClass("success-status lose-status");
+                            $("#play-again").hide();
+                        }
+                    }
+                });
+            });
+
+            $("#play-again").click(function() {
+                $.ajax({
+                    url: '/restart',
+                    type: 'POST',
+                    success: function(response) {
+                        $("#status").hide();
+                        $("#play-again").hide();
+                        $("#guess-form").show();
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Great Number Game!</h1>
+        <p>I am thinking of a number between 1 and 100</p>
+        <p>Take a guess!</p>
+        <div id="status" class="status" style="display: none;"></div>
+
+        <form id="guess-form">
+            <div class="input-group">
+                <input type="number" name="guess" required>
+            </div>
+            <div class="input-group">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+        <div id="play-again-container">
+            <button id="play-again" style="display: none;">Play Again</button>
+        </div>
+    </div>
+</body>
+</html>
+
